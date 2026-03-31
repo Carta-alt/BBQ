@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BBQ Dog</title>
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    html{
+      scroll-behavior:smooth;
+    }
+
+    :root{
+      --bg:#120b09;
+      --bg-2:#1b100d;
+      --panel:#1f1411;
+      --panel-2:#281915;
+      --line:rgba(255,255,255,0.08);
+      --white:#fff7ef;
+      --cream:#f1dfcf;
+      --muted:#c8b2a1;
+      --gold:#e2a55e;
+      --orange:#d86a2f;
+      --red:#a93a1d;
+      --ember:#ff8a3d;
+      --shadow:0 20px 55px rgba(0,0,0,0.38);
+    }
+
+    body{
+      font-family: Georgia, serif;
+      color:var(--white);
+      background:
+        radial-gradient(circle at top, rgba(216,106,47,0.12), transparent 22%),
+        linear-gradient(180deg, #1a100d 0%, #120b09 100%);
+      overflow-x:hidden;
+    }
+
+    .smoke{
+      position:absolute;
+      inset:0;
+      overflow:hidden;
+      pointer-events:none;
+      z-index:1;
+    }
+
+    .smoke span{
+      position:absolute;
+      bottom:-140px;
+      width:180px;
+      height:180px;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.03) 45%, transparent 72%);
+      filter:blur(18px);
+      animation:smokeRise linear infinite;
+      opacity:.45;
+    }
+
+    .smoke span:nth-child(1){ left:8%; animation-duration:12s; animation-delay:0s; transform:scale(0.9); }
+    .smoke span:nth-child(2){ left:22%; animation-duration:16s; animation-delay:2s; transform:scale(1.2); }
+    .smoke span:nth-child(3){ left:40%; animation-duration:14s; animation-delay:1s; transform:scale(1); }
+    .smoke span:nth-child(4){ left:58%; animation-duration:18s; animation-delay:3s; transform:scale(1.25); }
+    .smoke span:nth-child(5){ left:74%; animation-duration:13s; animation-delay:2s; transform:scale(0.95); }
+    .smoke span:nth-child(6){ left:88%; animation-duration:17s; animation-delay:4s; transform:scale(1.15); }
+
+    @keyframes smokeRise{
+      0%{
+        transform:translateY(0) translateX(0) scale(0.8);
+        opacity:0;
+      }
+      10%{
+        opacity:.32;
+      }
+      50%{
+        transform:translateY(-320px) translateX(25px) scale(1.15);
+        opacity:.28;
+      }
+      100%{
+        transform:translateY(-760px) translateX(-30px) scale(1.5);
+        opacity:0;
+      }
+    }
+
+    .hero{
+      min-height:100vh;
+      position:relative;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:40px 20px;
+      background:
+        linear-gradient(rgba(16,10,8,.42), rgba(16,10,8,.82)),
+        url("data:image/svg+xml;utf8,\
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 900'>\
+<defs>\
+<linearGradient id='bg' x1='0' x2='0' y1='0' y2='1'>\
+<stop offset='0%' stop-color='%23321913'/>\
+<stop offset='45%' stop-color='%2346251b'/>\
+<stop offset='100%' stop-color='%23110908'/>\
+</linearGradient>\
+</defs>\
+<rect width='1600' height='900' fill='url(%23bg)'/>\
+<ellipse cx='800' cy='190' rx='460' ry='180' fill='%23d86a2f' opacity='0.12'/>\
+<rect y='640' width='1600' height='260' fill='%23110a08'/>\
+<rect x='150' y='560' width='1300' height='26' rx='13' fill='%23311e18'/>\
+<rect x='260' y='360' width='26' height='220' fill='%23211410'/>\
+<rect x='1314' y='360' width='26' height='220' fill='%23211410'/>\
+<rect x='310' y='390' width='980' height='24' rx='12' fill='%23422a22'/>\
+<rect x='355' y='418' width='900' height='25' rx='12' fill='%23593428'/>\
+<rect x='420' y='447' width='760' height='18' rx='9' fill='%2370422f'/>\
+<ellipse cx='800' cy='710' rx='320' ry='55' fill='%2344271d' opacity='0.7'/>\
+<ellipse cx='800' cy='718' rx='230' ry='34' fill='%236b3623' opacity='0.8'/>\
+<circle cx='720' cy='700' r='10' fill='%23ffb347' opacity='0.82'/>\
+<circle cx='775' cy='690' r='12' fill='%23ff8a3d' opacity='0.82'/>\
+<circle cx='835' cy='700' r='10' fill='%23ffb347' opacity='0.84'/>\
+<circle cx='895' cy='692' r='13' fill='%23ff8a3d' opacity='0.8'/>\
+</svg>");
+      background-size:cover;
+      background-position:center;
+      overflow:hidden;
+    }
+
+    .hero::after{
+      content:"";
+      position:absolute;
+      inset:auto 0 0 0;
+      height:180px;
+      background:linear-gradient(to top, rgba(18,11,9,1), transparent);
+      z-index:1;
+    }
+
+    .hero-card{
+      width:100%;
+      max-width:1180px;
+      background:rgba(23,14,11,.68);
+      border:1px solid rgba(255,255,255,0.08);
+      border-radius:34px;
+      overflow:hidden;
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(10px);
+      position:relative;
+      z-index:2;
+    }
+
+    .hero-grid{
+      display:grid;
+      grid-template-columns:1.1fr .9fr;
+    }
+
+    .hero-copy{
+      padding:68px 58px;
+      position:relative;
+    }
+
+    .eyebrow{
+      color:var(--gold);
+      text-transform:uppercase;
+      letter-spacing:3px;
+      font-size:.84rem;
+      margin-bottom:16px;
+    }
+
+    h1{
+      font-size:4.8rem;
+      line-height:.92;
+      margin-bottom:20px;
+      color:#fff8f1;
+      text-shadow:0 10px 30px rgba(0,0,0,.35);
+    }
+
+    h1 span{
+      color:var(--gold);
+    }
+
+    .hero-copy p{
+      max-width:620px;
+      color:var(--muted);
+      font-size:1.08rem;
+      line-height:1.8;
+      margin-bottom:30px;
+    }
+
+    .hero-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:14px;
+    }
+
+    .btn{
+      text-decoration:none;
+      padding:14px 24px;
+      border-radius:999px;
+      font-weight:bold;
+      font-size:.96rem;
+      transition:.25s ease;
+      display:inline-block;
+    }
+
+    .btn-primary{
+      color:white;
+      background:linear-gradient(135deg, var(--red), var(--orange));
+      box-shadow:0 10px 24px rgba(169,58,29,.28);
+    }
+
+    .btn-primary:hover{
+      transform:translateY(-2px);
+      box-shadow:0 14px 28px rgba(169,58,29,.32);
+    }
+
+    .btn-secondary{
+      color:var(--white);
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.1);
+    }
+
+    .btn-secondary:hover{
+      transform:translateY(-2px);
+      background:rgba(255,255,255,.06);
+    }
+
+    .hero-logo{
+      position:relative;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:40px;
+      min-height:440px;
+      border-left:1px solid rgba(255,255,255,0.06);
+      background:
+        radial-gradient(circle at center, rgba(216,106,47,.16), transparent 46%),
+        linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
+    }
+
+    .logo-wrap{
+      width:300px;
+      height:300px;
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      position:relative;
+      background:
+        radial-gradient(circle at 35% 30%, #f7c98c, #d86a2f 42%, #8f3218 69%, #3a1911 100%);
+      border:8px solid rgba(255,255,255,.08);
+      box-shadow:
+        0 0 0 16px rgba(255,255,255,.025),
+        0 26px 60px rgba(0,0,0,.32);
+      animation:logoFloat 4.5s ease-in-out infinite;
+    }
+
+    .logo-wrap::before{
+      content:"";
+      position:absolute;
+      inset:24px;
+      border-radius:50%;
+      border:2px dashed rgba(255,255,255,.2);
+    }
+
+    .logo-wrap::after{
+      content:"";
+      position:absolute;
+      inset:-12px;
+      border-radius:50%;
+      background:conic-gradient(from 0deg, rgba(255,138,61,.22), transparent 25%, rgba(255,179,71,.2), transparent 60%, rgba(216,106,47,.16), transparent 100%);
+      filter:blur(16px);
+      z-index:-1;
+    }
+
+    @keyframes logoFloat{
+      0%,100%{ transform:translateY(0); }
+      50%{ transform:translateY(-8px); }
+    }
+
+    .dog-logo{
+      width:160px;
+      height:160px;
+    }
+
+    .hero-stats{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      border-top:1px solid rgba(255,255,255,.06);
+    }
+
+    .stat{
+      padding:22px 18px;
+      text-align:center;
+      background:rgba(255,255,255,.02);
+      border-right:1px solid rgba(255,255,255,.06);
+    }
+
+    .stat:last-child{
+      border-right:none;
+    }
+
+    .stat strong{
+      display:block;
+      color:var(--gold);
+      font-size:1.35rem;
+      margin-bottom:6px;
+    }
+
+    .stat span{
+      color:var(--muted);
+      font-size:.95rem;
+    }
+
+    .section{
+      max-width:1200px;
+      margin:0 auto;
+      padding:90px 20px 0;
+    }
+
+    .section-title{
+      text-align:center;
+      margin-bottom:38px;
+    }
+
+    .section-title .mini{
+      color:var(--orange);
+      letter-spacing:3px;
+      text-transform:uppercase;
+      font-size:.82rem;
+      margin-bottom:10px;
+    }
+
+    .section-title h2{
+      font-size:2.9rem;
+      margin-bottom:12px;
+      color:#fff8f0;
+    }
+
+    .section-title p{
+      max-width:760px;
+      margin:0 auto;
+      color:var(--muted);
+      line-height:1.7;
+    }
+
+    .menu-nav{
+      display:flex;
+      flex-wrap:wrap;
+      gap:14px;
+      justify-content:center;
+      margin-bottom:34px;
+    }
+
+    .menu-nav a{
+      text-decoration:none;
+      color:var(--white);
+      background:var(--panel);
+      border:1px solid var(--line);
+      padding:12px 18px;
+      border-radius:999px;
+      font-weight:bold;
+      transition:.25s ease;
+    }
+
+    .menu-nav a:hover{
+      transform:translateY(-2px);
+      background:#2c1a15;
+    }
+
+    .menu-group{
+      margin-bottom:56px;
+      scroll-margin-top:110px;
+    }
+
+    .menu-group h3{
+      font-size:2rem;
+      color:var(--gold);
+      margin-bottom:24px;
+      border-left:5px solid var(--red);
+      padding-left:14px;
+    }
+
+    .cards{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:22px;
+    }
+
+    .dish{
+      position:relative;
+      display:block;
+      text-decoration:none;
+      background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
+      border:1px solid var(--line);
+      border-radius:24px;
+      overflow:hidden;
+      box-shadow:var(--shadow);
+      transition:.28s ease;
+      isolation:isolate;
+      padding:24px 22px 22px;
+      min-height:190px;
+    }
+
+    .dish::before{
+      content:"";
+      position:absolute;
+      top:-120%;
+      left:-40%;
+      width:60%;
+      height:260%;
+      background:linear-gradient(90deg, transparent, rgba(255,255,255,.16), transparent);
+      transform:rotate(18deg);
+      transition:.6s ease;
+      z-index:1;
+      pointer-events:none;
+    }
+
+    .dish:hover::before{
+      left:130%;
+    }
+
+    .dish:hover{
+      transform:translateY(-6px);
+      border-color:rgba(226,165,94,.28);
+      box-shadow:0 28px 62px rgba(0,0,0,.42);
+      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+    }
+
+    .dish-top{
+      display:flex;
+      justify-content:space-between;
+      gap:16px;
+      align-items:flex-start;
+      margin-bottom:12px;
+      position:relative;
+      z-index:2;
+    }
+
+    .dish h4{
+      font-size:1.18rem;
+      line-height:1.3;
+      color:#fff8ef;
+      max-width:75%;
+    }
+
+    .price{
+      color:var(--gold);
+      font-weight:bold;
+      white-space:nowrap;
+      font-size:1rem;
+    }
+
+    .dish p{
+      color:var(--muted);
+      line-height:1.75;
+      font-size:.96rem;
+      position:relative;
+      z-index:2;
+      margin-bottom:18px;
+    }
+
+    .dish-tag{
+      display:inline-block;
+      padding:9px 13px;
+      border-radius:999px;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.08);
+      color:var(--cream);
+      font-size:.84rem;
+      position:relative;
+      z-index:2;
+    }
+
+    .about-box{
+      margin-top:28px;
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:28px;
+      padding:34px;
+      border-radius:28px;
+      background:linear-gradient(135deg, rgba(169,58,29,.12), rgba(255,255,255,.02));
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+    }
+
+    .about-box h3{
+      color:var(--gold);
+      font-size:1.7rem;
+      margin-bottom:14px;
+    }
+
+    .about-box p{
+      color:var(--muted);
+      line-height:1.8;
+    }
+
+    .tags{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      align-content:start;
+    }
+
+    .tag{
+      padding:10px 14px;
+      border-radius:999px;
+      background:rgba(255,255,255,.04);
+      border:1px solid var(--line);
+      color:var(--cream);
+      font-size:.92rem;
+    }
+
+    footer{
+      margin-top:90px;
+      padding:42px 20px 70px;
+      border-top:1px solid rgba(255,255,255,.06);
+      text-align:center;
+      background:rgba(0,0,0,.16);
+    }
+
+    .insta{
+      display:inline-flex;
+      align-items:center;
+      gap:12px;
+      text-decoration:none;
+      color:#fff9f2;
+      padding:16px 22px;
+      border-radius:999px;
+      background:linear-gradient(135deg, rgba(169,58,29,.2), rgba(216,106,47,.12));
+      border:1px solid rgba(255,255,255,.08);
+      transition:.25s ease;
+      margin-bottom:15px;
+    }
+
+    .insta:hover{
+      transform:translateY(-2px);
+      background:linear-gradient(135deg, rgba(169,58,29,.28), rgba(216,106,47,.16));
+    }
+
+    .insta svg{
+      width:22px;
+      height:22px;
+      fill:var(--gold);
+    }
+
+    .footer-text{
+      color:var(--muted);
+      font-size:.95rem;
+    }
+
+    @media (max-width:1050px){
+      .hero-grid,
+      .about-box,
+      .cards{
+        grid-template-columns:1fr 1fr;
+      }
+
+      .hero-stats{
+        grid-template-columns:1fr 1fr;
+      }
+    }
+
+    @media (max-width:760px){
+      h1{
+        font-size:3.2rem;
+      }
+
+      .hero-grid,
+      .cards,
+      .about-box,
+      .hero-stats{
+        grid-template-columns:1fr;
+      }
+
+      .hero-copy,
+      .hero-logo{
+        padding:34px 24px;
+      }
+
+      .logo-wrap{
+        width:230px;
+        height:230px;
+      }
+
+      .dog-logo{
+        width:120px;
+        height:120px;
+      }
+
+      .section-title h2{
+        font-size:2.2rem;
+      }
+
+      .dish h4{
+        max-width:68%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <section class="hero">
+    <div class="smoke">
+      <span></span><span></span><span></span><span></span><span></span><span></span>
+    </div>
+
+    <div class="hero-card">
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <div class="eyebrow">Smoke House • Fire Grill • Premium Street Food</div>
+          <h1>BBQ <span>Dog</span></h1>
+          <p>
+            Una carta con alma de brasa, estética potente y sabor ahumado. BBQ Dog mezcla
+            fuego, carne, humo y una imagen muy marcada para crear una experiencia visual
+            mucho más profesional, limpia y memorable.
+          </p>
+
+          <div class="hero-actions">
+            <a href="#carta" class="btn btn-primary">Ver carta</a>
+            <a href="#insta" class="btn btn-secondary">Instagram</a>
+          </div>
+        </div>
+
+        <div class="hero-logo">
+          <div class="logo-wrap">
+            <svg class="dog-logo" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-label="Logo perro BBQ">
+              <g fill="#fff4e6">
+                <path d="M66 58c-12 3-22 16-22 31 0 8 2 15 7 21-1 4-2 8-2 12 0 27 23 48 51 48s51-21 51-48c0-4-1-8-2-12 5-6 7-13 7-21 0-15-10-28-22-31-7-14-20-21-34-21s-27 7-34 21z"/>
+                <path d="M55 66c-10 0-19-10-19-22 0-8 4-15 11-19 10 4 17 15 17 27 0 5-1 10-3 14-2 0-4 0-6 0z" fill="#2b160f"/>
+                <path d="M145 66c10 0 19-10 19-22 0-8-4-15-11-19-10 4-17 15-17 27 0 5 1 10 3 14 2 0 4 0 6 0z" fill="#2b160f"/>
+                <ellipse cx="80" cy="92" rx="8" ry="10" fill="#2a140e"/>
+                <ellipse cx="120" cy="92" rx="8" ry="10" fill="#2a140e"/>
+                <ellipse cx="100" cy="112" rx="13" ry="9" fill="#2a140e"/>
+                <path d="M86 129c6 7 16 11 26 11s20-4 26-11" fill="none" stroke="#2a140e" stroke-width="6" stroke-linecap="round"/>
+                <path d="M62 117c-10 2-17 9-17 18 0 11 10 19 24 19 8 0 15-3 20-7" fill="none" stroke="#f0d3b0" stroke-width="8" stroke-linecap="round"/>
+                <path d="M138 117c10 2 17 9 17 18 0 11-10 19-24 19-8 0-15-3-20-7" fill="none" stroke="#f0d3b0" stroke-width="8" stroke-linecap="round"/>
+              </g>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-stats">
+        <div class="stat"><strong>5</strong><span>Entrantes</span></div>
+        <div class="stat"><strong>8</strong><span>Principales</span></div>
+        <div class="stat"><strong>4</strong><span>Postres</span></div>
+        <div class="stat"><strong>8</strong><span>Bebidas</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="carta">
+    <div class="section-title">
+      <div class="mini">Carta principal</div>
+      <h2>Carne, fuego y actitud</h2>
+      <p>
+        Una carta visualmente fuerte, con diseño limpio, bloques claros y un estilo BBQ
+        premium pensado para impactar desde la primera pantalla.
+      </p>
+    </div>
+
+    <div class="menu-nav">
+      <a href="#entrantes">Entrantes</a>
+      <a href="#principales">Principales</a>
+      <a href="#postres">Postres</a>
+      <a href="#bebidas">Bebidas</a>
+    </div>
+
+    <div class="menu-group" id="entrantes">
+      <h3>Entrantes</h3>
+      <div class="cards">
+        <a class="dish sound-link" href="#entrantes">
+          <div class="dish-top"><h4>Nachos Smoked Pit</h4><div class="price">8,90€</div></div>
+          <p>Nachos crujientes con cheddar fundido, pulled pork ahumado, jalapeños y salsa BBQ de la casa.</p>
+          <span class="dish-tag">Pulled pork</span>
+        </a>
+
+        <a class="dish sound-link" href="#entrantes">
+          <div class="dish-top"><h4>Wings Red Ember</h4><div class="price">9,50€</div></div>
+          <p>Alitas glaseadas al estilo ahumado con doble acabado: miel picante o bourbon BBQ.</p>
+          <span class="dish-tag">Alitas premium</span>
+        </a>
+
+        <a class="dish sound-link" href="#entrantes">
+          <div class="dish-top"><h4>Tabla Carnívora</h4><div class="price">12,80€</div></div>
+          <p>Selección de chorizo criollo, brisket curado, queso ahumado y pan rústico tostado.</p>
+          <span class="dish-tag">Para compartir</span>
+        </a>
+
+        <a class="dish sound-link" href="#entrantes">
+          <div class="dish-top"><h4>Toast Burnt Onion</h4><div class="price">7,60€</div></div>
+          <p>Tostas crujientes con cebolla caramelizada, crema cheddar y bacon crujiente.</p>
+          <span class="dish-tag">Crujiente</span>
+        </a>
+
+        <a class="dish sound-link" href="#entrantes">
+          <div class="dish-top"><h4>Slaw del Ahumador</h4><div class="price">6,90€</div></div>
+          <p>Ensalada fresca de col con toque de mostaza dulce, pepinillo y crujiente de cebolla.</p>
+          <span class="dish-tag">Fresco</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="menu-group" id="principales">
+      <h3>Principales</h3>
+      <div class="cards">
+        <a class="dish sound-link" href="#principales">
+          <div class="dish-top"><h4>BBQ Dog Burger</h4><div class="price">13,90€</div></div>
+          <p>Carne smash, cheddar madurado, bacon ahumado, cebolla crispy y salsa BBQ Dog.</p>
+          <span class="dish-tag">Best seller</span>
+        </a>
+
+        <a class="dish sound-link" href="#principales">
+          <div class="dish-top"><h4>Brisket Supreme</h4><div class="price">17,80€</div></div>
+          <p>Pecho de ternera ahumado lentamente, servido con parmentier y jugo reducido de carne.</p>
+          <span class="dish-tag">Ahumado lento</span>
+        </a>
+
+        <a class="dish sound-link" href="#principales">
+          <div class="dish-top"><h4>Costillar Fire Bark</h4><div class="price">18,50€</div></div>
+          <p>Costillas glaseadas con salsa bourbon, especias tostadas y patata gajo bien dorada.</p>
+          <span class="dish-tag">BBQ intenso</span>
+        </a>
+
+        <a class="dish sound-link" href="#principales">
+          <div class="dish-top"><h4>Pizza Smoke Pepper</h4><div class="price">12,40€</div></div>
+          <p>Masa artesana, pepperoni, mozzarella, cebolla asada y aceite ahumado al romero.</p>
+          <span class="dish-tag">Masa artesana</span>
+        </a>
+
+        <a class="dish sound-link" href="#principales">
+          <div class="dish-top"><h4>Chicken Coal Glaze</h4><div class="price">14,20€</div></div>
+          <p>Pechuga marinada, marcada a la parrilla con glaseado de miel especiada y mostaza antigua.</p>
+          <span class="dish-tag">Parrilla</span>
+        </a>
+
+        <a class="dish sound-link" href="#principales">
+          <div class="dish-top"><h4>Mac & Cheese Burnt</h4><div class="price">11,90€</div></div>
+          <p>Pasta cremosa con mezcla de quesos, topping crujiente y pulled beef ahumado.</p>
+          <span class="dish-tag">Cremoso</span>
+        </a>
+
+        <a class="dish sound-link" href="#principales">
+          <div class="dish-top"><h4>Pasta Rust & Smoke</h4><div class="price">12,90€</div></div>
+          <p>Tagliatelle cremosos con setas, parmesano curado y crujiente de panceta.</p>
+          <span class="dish-tag">Sabor intenso</span>
+        </a>
+
+        <a class="dish sound-link" href="#principales">
+          <div class="dish-top"><h4>Steakhouse Dog Plate</h4><div class="price">19,20€</div></div>
+          <p>Corte premium a la parrilla con mantequilla especiada y verduras al carbón.</p>
+          <span class="dish-tag">Premium cut</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="menu-group" id="postres">
+      <h3>Postres</h3>
+      <div class="cards">
+        <a class="dish sound-link" href="#postres">
+          <div class="dish-top"><h4>Brownie Black Flame</h4><div class="price">5,80€</div></div>
+          <p>Brownie intenso de chocolate con nueces y crema templada de vainilla.</p>
+          <span class="dish-tag">Chocolate</span>
+        </a>
+
+        <a class="dish sound-link" href="#postres">
+          <div class="dish-top"><h4>Cheesecake Ember</h4><div class="price">6,10€</div></div>
+          <p>Tarta cremosa de queso con frutos rojos y crumble crujiente.</p>
+          <span class="dish-tag">Cremoso</span>
+        </a>
+
+        <a class="dish sound-link" href="#postres">
+          <div class="dish-top"><h4>Flan Caramel Smoke</h4><div class="price">4,90€</div></div>
+          <p>Flan casero muy suave con caramelo tostado y toque de canela.</p>
+          <span class="dish-tag">Clásico</span>
+        </a>
+
+        <a class="dish sound-link" href="#postres">
+          <div class="dish-top"><h4>Cookie Skillet</h4><div class="price">6,40€</div></div>
+          <p>Galleta gigante al horno servida caliente con helado de vainilla.</p>
+          <span class="dish-tag">Templado</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="menu-group" id="bebidas">
+      <h3>Bebidas</h3>
+      <div class="cards">
+        <a class="dish sound-link" href="#bebidas">
+          <div class="dish-top"><h4>Agua Mineral</h4><div class="price">2,00€</div></div>
+          <p>Agua mineral muy fría, perfecta para acompañar carnes intensas.</p>
+          <span class="dish-tag">Fría</span>
+        </a>
+
+        <a class="dish sound-link" href="#bebidas">
+          <div class="dish-top"><h4>Cola Ice</h4><div class="price">2,90€</div></div>
+          <p>Refresco de cola servido con hielo y rodaja de lima.</p>
+          <span class="dish-tag">Refresco</span>
+        </a>
+
+        <a class="dish sound-link" href="#bebidas">
+          <div class="dish-top"><h4>Cerveza Rubia</h4><div class="price">3,20€</div></div>
+          <p>Servida bien fría, ligera y muy fácil de beber.</p>
+          <span class="dish-tag">Ligera</span>
+        </a>
+
+        <a class="dish sound-link" href="#bebidas">
+          <div class="dish-top"><h4>Cerveza Tostada</h4><div class="price">3,40€</div></div>
+          <p>Más cuerpo, más aroma y un perfil ideal para parrilla.</p>
+          <span class="dish-tag">Con cuerpo</span>
+        </a>
+
+        <a class="dish sound-link" href="#bebidas">
+          <div class="dish-top"><h4>Vino Tinto House</h4><div class="price">3,90€</div></div>
+          <p>Copa de vino tinto con matices afrutados y buena estructura.</p>
+          <span class="dish-tag">Tinto</span>
+        </a>
+
+        <a class="dish sound-link" href="#bebidas">
+          <div class="dish-top"><h4>Limonada Ahumada</h4><div class="price">3,80€</div></div>
+          <p>Limonada casera con hierbabuena y un sutil toque especiado.</p>
+          <span class="dish-tag">Casera</span>
+        </a>
+
+        <a class="dish sound-link" href="#bebidas">
+          <div class="dish-top"><h4>Milkshake Vanilla Dog</h4><div class="price">4,50€</div></div>
+          <p>Batido cremoso de vainilla con topping de nata suave.</p>
+          <span class="dish-tag">Batido</span>
+        </a>
+
+        <a class="dish sound-link" href="#bebidas">
+          <div class="dish-top"><h4>Zumo Fresh Orange</h4><div class="price">3,90€</div></div>
+          <p>Zumo natural de naranja recién exprimido.</p>
+          <span class="dish-tag">Natural</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="about-box">
+      <div>
+        <h3>La identidad de BBQ Dog</h3>
+        <p>
+          Este diseño está pensado para verse contundente, limpio y moderno. El fuego,
+          la carne y el humo marcan toda la experiencia visual, pero sin recargar la página.
+          La idea es que parezca una marca seria, reconocible y muy potente.
+        </p>
+      </div>
+      <div class="tags">
+        <div class="tag">Smoke House</div>
+        <div class="tag">Premium Burgers</div>
+        <div class="tag">BBQ Sauce</div>
+        <div class="tag">Coal Grill</div>
+        <div class="tag">Street Food</div>
+        <div class="tag">Signature Meat</div>
+        <div class="tag">Bold Branding</div>
+        <div class="tag">Modern Menu</div>
+      </div>
+    </div>
+  </section>
+
+  <footer id="insta">
+    <a class="insta sound-link" href="#insta" aria-label="Instagram BBQ-3">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2zm0 1.8A3.95 3.95 0 0 0 3.8 7.75v8.5a3.95 3.95 0 0 0 3.95 3.95h8.5a3.95 3.95 0 0 0 3.95-3.95v-8.5a3.95 3.95 0 0 0-3.95-3.95h-8.5zm8.9 1.35a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 1.8A3.2 3.2 0 1 0 12 15.2 3.2 3.2 0 0 0 12 8.8z"/>
+      </svg>
+      <span><strong>Instagram:</strong> BBQ-3</span>
+    </a>
+    <div class="footer-text">© 2026 BBQ Dog · Fuego, humo y sabor con personalidad.</div>
+  </footer>
+
+  <script>
+    let audioCtx;
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+    }
+
+    function playPageFlipSound() {
+      initAudio();
+      const now = audioCtx.currentTime;
+
+      const noiseBuffer = audioCtx.createBuffer(1, audioCtx.sampleRate * 0.22, audioCtx.sampleRate);
+      const output = noiseBuffer.getChannelData(0);
+
+      for (let i = 0; i < output.length; i++) {
+        output[i] = (Math.random() * 2 - 1) * (1 - i / output.length);
+      }
+
+      const noise = audioCtx.createBufferSource();
+      noise.buffer = noiseBuffer;
+
+      const bandpass = audioCtx.createBiquadFilter();
+      bandpass.type = "bandpass";
+      bandpass.frequency.setValueAtTime(900, now);
+      bandpass.Q.setValueAtTime(0.7, now);
+
+      const highpass = audioCtx.createBiquadFilter();
+      highpass.type = "highpass";
+      highpass.frequency.setValueAtTime(420, now);
+
+      const gain = audioCtx.createGain();
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.exponentialRampToValueAtTime(0.05, now + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.22);
+
+      noise.connect(bandpass);
+      bandpass.connect(highpass);
+      highpass.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      noise.start(now);
+      noise.stop(now + 0.23);
+
+      const tone = audioCtx.createOscillator();
+      const toneGain = audioCtx.createGain();
+      tone.type = "triangle";
+      tone.frequency.setValueAtTime(680, now);
+      tone.frequency.exponentialRampToValueAtTime(420, now + 0.14);
+      toneGain.gain.setValueAtTime(0.0001, now);
+      toneGain.gain.exponentialRampToValueAtTime(0.018, now + 0.02);
+      toneGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.18);
+
+      tone.connect(toneGain);
+      toneGain.connect(audioCtx.destination);
+      tone.start(now);
+      tone.stop(now + 0.19);
+    }
+
+    document.querySelectorAll('.sound-link').forEach(el => {
+      el.addEventListener('click', () => {
+        playPageFlipSound();
+      });
+    });
+
+    document.addEventListener('pointerdown', () => {
+      initAudio();
+    }, { once: true });
+  </script>
+
+</body>
+</html>
